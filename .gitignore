@@ -1,0 +1,8 @@
+.env
+bin
+include
+lib
+lib64
+output.wav
+share
+pyvenv.cfg
