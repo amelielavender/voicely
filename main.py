@@ -22,10 +22,6 @@ intents.members = True # don't know if i need this permission yet
 
 client = discord.Client(intents=intents)
 
-for filename in os.listdir('./cogs'): # read cogs folder
-    if filename.endswith('.py'):
-        voicely.load_extension(f'cogs.{filename[:-3]}')
-
 
 voicely = commands.Bot(
         command_prefix = ':',
@@ -98,9 +94,10 @@ async def tts(ctx, *, arg):
 
 def next(ctx):
     if len(queue) != 0:
+        guild = ctx.guild.id
         tts = TTS(model_name="tts_models/en/ljspeech/glow-tts")
         tts.tts_to_file(text=queue.pop(0), file_path='output.wav') 
-        player = ctx.voice_client.play(FFmpegPCMAudio('output.wav'), after=lambda e: next(ctx))
+        player = ctx.voice_client.play(FFmpegPCMAudio(f'output-{guild}.wav'), after=lambda e: next(ctx))
 
 
 @voicely.command()
@@ -115,46 +112,30 @@ async def stop(ctx):
 
 # DEBUG
 @voicely.command()
-async def addq(ctx, *, arg):
-    message = arg
-    queue.append(message)
-    await ctx.send("message has been added to the queue")
-    await ctx.send(queue)
-
-@voicely.command()
 async def clearq(ctx):
     queue[:] = []
     await ctx.send("queue has been cleared")
    
 
-@voicely.command()
-async def hold(ctx):
-    await ctx.send('*is hold* 😳')
-
-
-@voicely.command()
-async def ping(ctx):
-    await ctx.send('pong')
-
-
-@voicely.command()
-async def get_id(ctx, member: discord.Member):
-    id = member.id
-    try:
-        await ctx.send(f'{member}: {id}')
-        await ctx.send(ctx.message.author.id)
-    except:
-        ctx.send('missing argument')
-
-
-@voicely.command()
-async def db(ctx):
-    rows = cursor.execute("SELECT * FROM prefs").fetchall()
-    print(rows)
+@voicely.command()   
+async def addq(ctx, *, arg):
+    queue.append(arg)
+    await ctx.send('message has been addeed to `queue[]`')
+    await ctx.send(queue)
 
 # TODO: guild only commands
 # TODO: exit voice call after a while?
 # TODO: user prefs via db
 
+async def load_ext():
+    for filename in os.listdir('./cogs'): # read cogs folder
+        if filename.endswith('.py'):
+            await voicely.load_extension(f'cogs.{filename[:-3]}')
 
-voicely.run(token)
+
+async def main():
+    async with client:
+        await load_ext() 
+        await voicely.start(token)
+
+asyncio.run(main())
