@@ -3,6 +3,7 @@ import discord
 from discord import FFmpegPCMAudio
 from discord.ext import commands
 
+import os
 import sqlite3
 import asyncio
 
@@ -20,6 +21,11 @@ intents.message_content = True # permission scope
 intents.members = True # don't know if i need this permission yet
 
 client = discord.Client(intents=intents)
+
+for filename in os.listdir('./cogs'): # read cogs folder
+    if filename.endswith('.py'):
+        voicely.load_extension(f'cogs.{filename[:-3]}')
+
 
 voicely = commands.Bot(
         command_prefix = ':',
