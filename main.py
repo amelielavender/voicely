@@ -1,10 +1,8 @@
-import discord
+import discord, asyncio, os
 
-from discord.ext import commands
+from discord.ext import commands, app_commands
 
-import os
 import sqlite3
-import asyncio
 
 from dotenv import load_dotenv
 from os import getenv
@@ -24,6 +22,8 @@ voicely = commands.Bot(
         intents = intents
         )
 
+tree = app_commands.CommandTree(voicely)
+
 connection = sqlite3.connect('preferences.db')
 cursor = connection.cursor()
 # returns a cursor object that lets us use sql statements using cursor.execute()
@@ -32,7 +32,13 @@ cursor = connection.cursor()
 async def on_ready():
     print(f'logging on as {voicely.user}')
     #cursor.execute('INSERT OR IGNORE()')
-    
+
+
+@bot.command()
+@commands.is_owner()
+async def sync(ctx):
+    await bot.tree.sync()
+
 
 @voicely.command()
 async def set(ctx, language, voice):
