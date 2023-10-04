@@ -1,20 +1,24 @@
 import discord
+from discord import FFmpegPCMAudio
 from discord.ext import commands
 from queue import Queue
 from typing import Dict
+
+from TTS.api import TTS
 
 
 class TTSq:
     def __init__(self, id: int): # the only thing we need to pass in is an id variable. we annotate with the colon after the variable name.
         self.id = id
-        self.queue = Queue(maxsize=3) # queue variable, type of Queue's max size 
+        self.queue = [] # queue variable, type of Queue's max size 
 
     def add_msg(self, msg):
-        self.queue.put(msg)
+        self.queue.append(msg)
 
     @property
     def is_full(self):
-        return self.queue.full()
+        if len(self.queue) > 3:
+            return True
 
 
 """ every TTSq object has a queue of size 3 associated with it
@@ -62,8 +66,19 @@ class voice_commands(commands.Cog):
             return        
         else:
             q.add_msg(message)
-            await ctx.send(q.queue.get() + ' get()')
 
+        while not ctx.voice_client.is_playing():
+            self.next(ctx, q)
+
+
+    def next(self, ctx, q):
+        if len(q.queue) == 0:
+            return
+        if not q.is_full:
+            guild = ctx.guild.id
+            tts = TTS(model_name="tts_models/en/ljspeech/glow-tts")
+            tts.tts_to_file(text=q.queue.pop(0), file_path=f'output-{guild}.wav') 
+            player = ctx.voice_client.play(FFmpegPCMAudio(f'output-{guild}.wav'), after=lambda e: self.next(ctx, q))
 
 
     @commands.command()
