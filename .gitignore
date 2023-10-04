@@ -3,7 +3,7 @@ bin
 include
 lib
 lib64
-output.wav
+output*
 share
 pyvenv.cfg
 *.db

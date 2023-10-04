@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 
+
 class debug(commands.Cog):
     def __init__(self, voicely):
         self.voicely = voicely
@@ -24,7 +25,7 @@ class debug(commands.Cog):
         try:
             await ctx.send(f'{member}: {id}')
         except:
-            await ctx.send('missing argument')
+            await ctx.send('usage: :get_id `@user`')
 
 
 async def setup(client):

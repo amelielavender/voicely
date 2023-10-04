@@ -1,7 +1,7 @@
 import discord
 from discord import FFmpegPCMAudio
 from discord.ext import commands
-from queue import Queue
+
 from typing import Dict
 
 from TTS.api import TTS
@@ -52,6 +52,7 @@ class voice_commands(commands.Cog):
         if (await self.join(ctx) == False):
             return
 
+
         guild = ctx.guild.id
         q = self.queues.get(guild, TTSq(guild)) # get current guild's queue from qs Dict
         self.queues[guild] = q # assign q's value to qs[guild]'s key
@@ -60,7 +61,8 @@ class voice_commands(commands.Cog):
 
         # concatenate name and msg received as arg
         message = '{} said: {}'.format(user, arg) 
-        await ctx.send(message)
+
+
         if q.is_full:
             await ctx.send('Cannot have more than 3 messages in the queue. Please wait a moment and try again later.')
             return        
@@ -68,13 +70,11 @@ class voice_commands(commands.Cog):
             q.add_msg(message)
 
         while not ctx.voice_client.is_playing():
-            self.next(ctx, q)
+            self.next(ctx, q)        
 
 
     def next(self, ctx, q):
-        if len(q.queue) == 0:
-            return
-        if not q.is_full:
+        if len(q.queue) != 0:
             guild = ctx.guild.id
             tts = TTS(model_name="tts_models/en/ljspeech/glow-tts")
             tts.tts_to_file(text=q.queue.pop(0), file_path=f'output-{guild}.wav') 
@@ -83,11 +83,22 @@ class voice_commands(commands.Cog):
 
     @commands.command()
     async def leave(self, ctx):
+        if (await self.join(ctx)) == False:
+            return
         if (ctx.voice_client):
             await ctx.voice_client.disconnect() 
             await ctx.send('I have left the voice channel')
         else:
             await ctx.send('I am not in a voice channel') 
+
+
+    @commands.command()
+    async def skip(self, ctx):
+        if (await self.join(ctx)) == False:
+            return
+        if ctx.voice_client.is_playing():
+            ctx.voice_client.stop()
+            await ctx.send('Skipping message')
 
 
 async def setup(client):
