@@ -41,28 +41,6 @@ async def sync(ctx):
     await ctx.send('syncing to global namespace')
 
 
-@voicely.command()
-async def set(ctx, language, voice):
-    try:
-        id = ctx.message.author.id 
-        params = (id, language, voice)
-        cursor.execute('INSERT INTO prefs VALUES (?, ?, ?)',params)
-    except:
-        await ctx.send('u scrunbled it')
-
-# DEBUG
-@voicely.command()
-async def clearq(ctx):
-    queue[:] = []
-    await ctx.send("queue has been cleared")
-   
-
-@voicely.command()   
-async def addq(ctx, *, arg):
-    queue.append(arg)
-    await ctx.send('message has been addeed to `queue[]`')
-    await ctx.send(queue)
-
 # TODO: guild only commands
 # TODO: exit voice call after a while?
 # TODO: user prefs via db
