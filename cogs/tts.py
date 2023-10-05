@@ -51,8 +51,11 @@ class voice_commands(commands.Cog):
     async def tts(self, ctx, *, arg):
         if (await self.join(ctx) == False):
             return
+        else:
+            await self.speak(ctx, arg)
 
 
+    async def speak(self, ctx, msg):
         guild = ctx.guild.id
         q = self.queues.get(guild, TTSq(guild)) # get current guild's queue from qs Dict
         self.queues[guild] = q # assign q's value to qs[guild]'s key
@@ -60,7 +63,7 @@ class voice_commands(commands.Cog):
         user = ctx.message.author.display_name 
 
         # concatenate name and msg received as arg
-        message = '{} said: {}'.format(user, arg) 
+        message = '{} said: {}'.format(user, msg) 
 
 
         if q.is_full:
@@ -106,25 +109,8 @@ class voice_commands(commands.Cog):
         channel = message.channel
         if not message.author.bot and not message.content.startswith(';tts') and message.author.voice: 
             ctx = await self.voicely.get_context(message)
-            guild = ctx.guild.id
+            await self.speak(ctx, message.content)
 
-            q = self.queues.get(guild, TTSq(guild)) # get current guild's queue from qs Dict
-            self.queues[guild] = q # assign q's value to qs[guild]'s key
-
-            user = ctx.message.author.display_name 
-
-        # concatenate name and msg received as arg
-            message = '{} said: {}'.format(user, message.content) 
-
-
-            if q.is_full:
-                await ctx.send('Cannot have more than 3 messages in the queue. Please wait a moment and try again later.')
-                return        
-            else:
-                q.add_msg(message)
-
-            while not ctx.voice_client.is_playing():
-                self.next(ctx, q) 
 
 # ask guild owner what channel voicely should listen in on.
 # giuld owner picks channel. 
