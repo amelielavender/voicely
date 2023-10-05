@@ -31,7 +31,7 @@ cursor = connection.cursor()
 @voicely.event
 async def on_ready():
     print(f'logging on as {voicely.user}')
-    #cursor.execute('INSERT OR IGNORE()')
+    await load_ext()
 
 
 @voicely.command()
@@ -40,12 +40,6 @@ async def sync(ctx):
     await bot.tree.sync()
     await ctx.send('syncing to global namespace')
 
-
-# TODO: guild only commands
-# TODO: exit voice call after a while?
-# TODO: user prefs via db
-# TODO: choose text channel to listen to
-# TODO: slash commands
 
 async def load_ext():
     for filename in os.listdir('./cogs'): # read cogs folder
@@ -63,12 +57,12 @@ async def unload(ctx, mycog):
     await voicely.unload_extension(f'cogs.{mycog}')
 
 
-async def main():
+#async def main():
     # TODO: try/except to handle cleanup on KeyboardInterrupt()
-    async with voicely:
-        await load_ext() 
+    #async with voicely:
+        #await load_ext() 
         
-#asyncio.run(main())
+#asyncio.start(main())
 
 voicely.run(token)
 
