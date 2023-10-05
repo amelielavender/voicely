@@ -1,8 +1,6 @@
 import discord
 from discord.ext import commands
 
-
-
 class debug(commands.Cog):
     def __init__(self, voicely):
         self.voicely = voicely

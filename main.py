@@ -1,6 +1,7 @@
 import discord, asyncio, os
 
-from discord.ext import commands, app_commands
+from discord import app_commands
+from discord.ext import commands 
 
 import sqlite3
 
@@ -22,7 +23,6 @@ voicely = commands.Bot(
         intents = intents
         )
 
-tree = app_commands.CommandTree(voicely)
 
 connection = sqlite3.connect('preferences.db')
 cursor = connection.cursor()
@@ -34,10 +34,11 @@ async def on_ready():
     #cursor.execute('INSERT OR IGNORE()')
 
 
-@bot.command()
+@voicely.command()
 @commands.is_owner()
 async def sync(ctx):
     await bot.tree.sync()
+    await ctx.send('syncing to global namespace')
 
 
 @voicely.command()
@@ -65,6 +66,8 @@ async def addq(ctx, *, arg):
 # TODO: guild only commands
 # TODO: exit voice call after a while?
 # TODO: user prefs via db
+# TODO: choose text channel to listen to
+# TODO: slash commands
 
 async def load_ext():
     for filename in os.listdir('./cogs'): # read cogs folder
@@ -87,7 +90,7 @@ async def main():
     async with voicely:
         await load_ext() 
         
-asyncio.run(main())
+#asyncio.run(main())
 
 voicely.run(token)
 
