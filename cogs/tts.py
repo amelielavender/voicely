@@ -101,5 +101,36 @@ class voice_commands(commands.Cog):
             await ctx.send('Skipping message')
 
 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        channel = message.channel
+        if not message.author.bot and not message.content.startswith(';tts') and message.author.voice: 
+            ctx = await self.voicely.get_context(message)
+            guild = ctx.guild.id
+
+            q = self.queues.get(guild, TTSq(guild)) # get current guild's queue from qs Dict
+            self.queues[guild] = q # assign q's value to qs[guild]'s key
+
+            user = ctx.message.author.display_name 
+
+        # concatenate name and msg received as arg
+            message = '{} said: {}'.format(user, message.content) 
+
+
+            if q.is_full:
+                await ctx.send('Cannot have more than 3 messages in the queue. Please wait a moment and try again later.')
+                return        
+            else:
+                q.add_msg(message)
+
+            while not ctx.voice_client.is_playing():
+                self.next(ctx, q) 
+
+# ask guild owner what channel voicely should listen in on.
+# giuld owner picks channel. 
+# we place that into a preference. 
+# voicely is listening for messages in that preference.
+
+
 async def setup(client):
     await client.add_cog(voice_commands(client))
