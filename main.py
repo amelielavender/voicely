@@ -31,7 +31,8 @@ async def on_ready():
 @voicely.command()
 @commands.is_owner()
 async def sync(ctx):
-    await bot.tree.sync()
+    await voicely.tree.sync(guild=ctx.guild)
+    await voicely.tree.sync()
     await ctx.send('syncing to global namespace')
 
 
@@ -41,14 +42,30 @@ async def load_ext():
             await voicely.load_extension(f'cogs.{filename[:-3]}')
 
 
-@voicely.command()
-async def load(ctx, mycog):
-    await voicely.load_extension(f'cogs.{mycog}')
+@voicely.hybrid_command(name='load', hidden=True)
+async def load(ctx: commands.Context, mycog: str) -> None:
+    try:
+        await voicely.load_extension(f'cogs.{mycog}')
+        await ctx.send(f'loaded {mycog}')
+    except:
+        await ctx.send('something went wrong')
+
+@voicely.hybrid_command(name='unload', hidden=True)
+async def unload(ctx: commands.Context, mycog: str) -> None:
+    try:
+        await voicely.unload_extension(f'cogs.{mycog}')
+        await ctx.send(f'unloaded {mycog}')
+    except:
+        await ctx.send('something went wrong')
 
 
-@voicely.command()
-async def unload(ctx, mycog):
-    await voicely.unload_extension(f'cogs.{mycog}')
+@voicely.hybrid_command(name='reload', hidden=True)
+async def rel(ctx: commands.Context, mycog: str) -> None:
+    try:
+        await voicely.reload_extension(f'cogs.{mycog}')
+        await ctx.send(f'reloading {mycog}')
+    except:
+        await ctx.send('something went wrong')
 
 
 #async def main():

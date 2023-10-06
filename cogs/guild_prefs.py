@@ -1,13 +1,11 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-
 import sqlite3 
 
 class settings(commands.Cog):
     def __init__(self, voicely):
         self.voicely = voicely
-        self.settings = {}
     
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -19,8 +17,8 @@ class settings(commands.Cog):
         connection.commit()
         connection.close()
 
-    @commands.command()
-    async def set(self, ctx, channel: discord.TextChannel):
+    @commands.hybrid_command(name='set', description='sets the text channel that voicely will listen to')
+    async def set(self, ctx: commands.Context, channel: discord.TextChannel) -> None:
         connection = sqlite3.connect('preferences.db')
         cursor = connection.cursor()
         
@@ -31,9 +29,10 @@ class settings(commands.Cog):
         
         connection.commit()
         connection.close()
+        await ctx.send(f'now watching {channel} :eyes:')
 
-    @commands.command()
-    async def xsaid(self, ctx, setting):
+    @commands.hybrid_command(name='xsaid', description='enables/disables x said prefix when speaking')
+    async def xsaid(self, ctx: commands.Context, setting: str) -> None:
         connection = sqlite3.connect('preferences.db')
         cursor = connection.cursor()
         
@@ -46,6 +45,7 @@ class settings(commands.Cog):
 
         connection.commit()
         connection.close()
+        await ctx.send(f'x said setting is now: {setting}')
         
 
 async def setup(client):

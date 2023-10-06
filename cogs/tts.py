@@ -1,17 +1,14 @@
 import discord
 from discord import FFmpegPCMAudio
 from discord.ext import commands
-
 from typing import Dict
-
 from gtts import gTTS
-
 import sqlite3
 
 class TTSq:
     def __init__(self, id: int): # the only thing we need to pass in is an id variable. we annotate with the colon after the variable name.
         self.id = id
-        self.queue = [] # queue variable, type of Queue's max size 
+        self.queue = [] # queue variable, q's max size will be 3 
 
     def add_msg(self, msg):
         self.queue.append(msg)
@@ -33,7 +30,6 @@ class voice_commands(commands.Cog):
         self.voicely = voicely
         self.queues: Dict[int, TTSq] = {} 
 
-
     async def join(self, ctx): # joins vc if msg author is in vc. 
         author = ctx.message.author # get msg author
         voice_chan = ctx.author.voice # join same vs msg author is in
@@ -47,13 +43,14 @@ class voice_commands(commands.Cog):
             await ctx.send('You are not in a voice channel.')
             return False
 
-
-    @commands.command()
-    async def tts(self, ctx, *, arg):
+    @commands.hybrid_command()
+    async def tts(self, ctx: commands.Context, *, arg: str) -> None:
         if (await self.join(ctx) == False):
             return
         else:
             await self.speak(ctx, arg)
+        emoji = '🔊'
+        await ctx.message.add_reaction(emoji)
 
 
     async def speak(self, ctx, msg):
@@ -94,8 +91,8 @@ class voice_commands(commands.Cog):
             player = ctx.voice_client.play(FFmpegPCMAudio(f'output-{guild}.mp3'), after=lambda e: self.next(ctx, q))
 
 
-    @commands.command()
-    async def leave(self, ctx):
+    @commands.hybrid_command(description='leaves the current voice channel')
+    async def leave(self, ctx: commands.Context) -> None:
         if (await self.join(ctx)) == False:
             return
         if (ctx.voice_client):
@@ -105,8 +102,8 @@ class voice_commands(commands.Cog):
             await ctx.send('I am not in a voice channel') 
 
 
-    @commands.command()
-    async def skip(self, ctx):
+    @commands.hybrid_command(description='skips the currently playing message')
+    async def skip(self, ctx: commands.Context) -> None:
         if (await self.join(ctx)) == False:
             return
         if ctx.voice_client.is_playing():
@@ -132,9 +129,6 @@ class voice_commands(commands.Cog):
             await self.speak(ctx, message.content)
         connection.close()
 
-
-# ask guild owner what channel voicely should listen in on.
-# giuld owner picks channel. 
 
 async def setup(client):
     await client.add_cog(voice_commands(client))
