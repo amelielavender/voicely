@@ -7,3 +7,5 @@ output*
 share
 pyvenv.cfg
 *.db
+*.csv
+__pycache__
