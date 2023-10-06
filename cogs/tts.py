@@ -62,9 +62,19 @@ class voice_commands(commands.Cog):
         self.queues[guild] = q # assign q's value to qs[guild]'s key
 
         user = ctx.message.author.display_name 
+        
+        connection = sqlite3.connect('preferences.db')
+        cursor = connection.cursor()
+        
+        result = cursor.execute('SELECT x_said FROM guilds WHERE guild_id= ? ',[guild])
+        xsaid = result.fetchone()
 
-        # concatenate name and msg received as arg
-        message = '{} said: {}'.format(user, msg) 
+        if xsaid[0] == 1:
+            # concatenate name and msg received as arg
+            message = '{} said: {}'.format(user, msg)
+        if xsaid[0] == 0:
+            message = msg
+        connection.close()
 
         if q.is_full:
             await ctx.send('Cannot have more than 3 messages in the queue. Please wait a moment and try again later.')
