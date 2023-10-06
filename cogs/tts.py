@@ -6,6 +6,7 @@ from typing import Dict
 
 from TTS.api import TTS
 
+import sqlite3
 
 class TTSq:
     def __init__(self, id: int): # the only thing we need to pass in is an id variable. we annotate with the colon after the variable name.
@@ -106,17 +107,25 @@ class voice_commands(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        channel = message.channel
-        if not message.author.bot and not message.content.startswith(';tts') and message.author.voice: 
+        connection = sqlite3.connect('preferences.db')
+        cursor = connection.cursor()
+        # returns a cursor object that lets us use sql statements using cursor.execute()
+
+        params = message.channel.id
+        result = cursor.execute('SELECT text_channel_id FROM guilds WHERE text_channel_id=?',[params])
+        channel = result.fetchone()
+
+        if channel is None:
+            return
+        if not message.author.bot and not message.content.startswith(';') and message.author.voice: 
             ctx = await self.voicely.get_context(message)
+            await self.join(ctx)
             await self.speak(ctx, message.content)
+        connection.close()
 
 
 # ask guild owner what channel voicely should listen in on.
 # giuld owner picks channel. 
-# we place that into a preference. 
-# voicely is listening for messages in that preference.
-
 
 async def setup(client):
     await client.add_cog(voice_commands(client))
