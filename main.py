@@ -3,8 +3,6 @@ import discord, asyncio, os
 from discord import app_commands
 from discord.ext import commands 
 
-import sqlite3
-
 from dotenv import load_dotenv
 from os import getenv
 
@@ -23,10 +21,6 @@ voicely = commands.Bot(
         intents = intents
         )
 
-
-connection = sqlite3.connect('preferences.db')
-cursor = connection.cursor()
-# returns a cursor object that lets us use sql statements using cursor.execute()
 
 @voicely.event
 async def on_ready():

@@ -4,7 +4,7 @@ from discord.ext import commands
 
 from typing import Dict
 
-from TTS.api import TTS
+from gtts import gTTS
 
 import sqlite3
 
@@ -66,7 +66,6 @@ class voice_commands(commands.Cog):
         # concatenate name and msg received as arg
         message = '{} said: {}'.format(user, msg) 
 
-
         if q.is_full:
             await ctx.send('Cannot have more than 3 messages in the queue. Please wait a moment and try again later.')
             return        
@@ -80,9 +79,9 @@ class voice_commands(commands.Cog):
     def next(self, ctx, q):
         if len(q.queue) != 0:
             guild = ctx.guild.id
-            tts = TTS(model_name="tts_models/en/ljspeech/glow-tts")
-            tts.tts_to_file(text=q.queue.pop(0), file_path=f'output-{guild}.wav') 
-            player = ctx.voice_client.play(FFmpegPCMAudio(f'output-{guild}.wav'), after=lambda e: self.next(ctx, q))
+            tts = gTTS(q.queue.pop(0), lang='en') 
+            tts.save(f'output-{guild}.mp3') 
+            player = ctx.voice_client.play(FFmpegPCMAudio(f'output-{guild}.mp3'), after=lambda e: self.next(ctx, q))
 
 
     @commands.command()
