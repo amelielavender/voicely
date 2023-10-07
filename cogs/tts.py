@@ -4,6 +4,11 @@ from discord.ext import commands
 from typing import Dict
 from gtts import gTTS
 import sqlite3
+from os import getenv
+
+load_dotenv()
+
+db = getenv("DATABASE")
 
 class TTSq:
     def __init__(self, id: int): # the only thing we need to pass in is an id variable. we annotate with the colon after the variable name.
@@ -43,15 +48,17 @@ class voice_commands(commands.Cog):
             await ctx.send('You are not in a voice channel.')
             return False
 
-    @commands.hybrid_command()
-    async def tts(self, ctx: commands.Context, *, arg: str) -> None:
+    @commands.hybrid_command(description='manually invoke voicely\'s text-to-speech')
+    async def tts(self, ctx: commands.Context, *, text: str) -> None:
         if (await self.join(ctx) == False):
             return
         else:
-            await self.speak(ctx, arg)
+            await self.speak(ctx, text)
         emoji = '🔊'
-        await ctx.message.add_reaction(emoji)
-
+        try:
+            await ctx.message.add_reaction(emoji)
+        except:
+            await discord.Interaction.message.add_reaction(emoji)
 
     async def speak(self, ctx, msg):
         guild = ctx.guild.id
@@ -60,7 +67,7 @@ class voice_commands(commands.Cog):
 
         user = ctx.message.author.display_name 
         
-        connection = sqlite3.connect('preferences.db')
+        connection = sqlite3.connect('db')
         cursor = connection.cursor()
         
         result = cursor.execute('SELECT x_said FROM guilds WHERE guild_id= ? ',[guild])
@@ -113,7 +120,7 @@ class voice_commands(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        connection = sqlite3.connect('preferences.db')
+        connection = sqlite3.connect('db')
         cursor = connection.cursor()
         # returns a cursor object that lets us use sql statements using cursor.execute()
 
