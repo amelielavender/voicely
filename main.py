@@ -1,14 +1,13 @@
 import discord 
 import asyncio
-import os
 from discord import app_commands
 from discord.ext import commands 
 from dotenv import load_dotenv
-from os import getenv
+import os
 
 load_dotenv()
 
-token = getenv("TOKEN")
+token = os.getenv("TOKEN")
     
 intents = discord.Intents.default() # discord's permission integer
 intents.message_content = True # permission scope
@@ -24,7 +23,7 @@ voicely = commands.Bot(
 
 @voicely.event
 async def on_ready():
-    print(f'logging on as {voicely.user}')
+    print(f'logging on as {voicely.user.id}')
     await load_ext()
 
 

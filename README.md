@@ -1,4 +1,4 @@
-- [ ] TODO: exit voice call after a while?
+- [x] TODO: exit voice call after a while?
 - [x] TODO: choose text channel to listen to
 - [x] TODO: slash commands
 - [ ] TODO: implement async start

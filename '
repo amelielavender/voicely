@@ -139,19 +139,19 @@ class voice_commands(commands.Cog):
         if not message.author.bot and not message.content.startswith(';') and message.author.voice: 
             await self.join(ctx)
             await self.speak(ctx, message.content)
-            vc = ctx.guild.voice_client.channel
-
-            while True:
-                await asyncio.sleep(1)
-                self.counter += 1
-                if self.counter > 20 and len(vc.members) == 1:
-                    await ctx.voice_client.disconnect()
-                    self.counter = 0
-                    return
-                elif len(vc.members) > 1:
-                    pass
         connection.close()
-
+        while True:
+            await asyncio.sleep(1)
+            self.counter += 1
+            print(self.counter)
+            vc = ctx.guild.voice_client.channel
+            print(vc.members)
+            if self.counter > 40 and len(vc.members) == 1:
+                await ctx.voice_client.disconnect()
+                return
+            elif len(vc.members) > 1:
+                pass
+            
 
 async def setup(client):
     await client.add_cog(voice_commands(client))

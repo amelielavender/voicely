@@ -2,10 +2,12 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import sqlite3 
-from os import getenv
+import os
+from dotenv import load_dotenv
 
 load_dotenv()
-db = getenv("DATABASE")
+
+db = os.getenv("DATABASE")
 
 class settings(commands.Cog):
     def __init__(self, voicely):
@@ -13,7 +15,7 @@ class settings(commands.Cog):
     
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        connection = sqlite3.connect('db')
+        connection = sqlite3.connect(db)
         cursor = connection.cursor()
         id = guild.id
         params = (id, 1)
@@ -24,7 +26,7 @@ class settings(commands.Cog):
     @commands.hybrid_command(name='set', description='sets the text channel that voicely will read from')
     @app_commands.describe(channel='choose the text channel for voicely to read from')
     async def set(self, ctx: commands.Context, channel: discord.TextChannel) -> None:
-        connection = sqlite3.connect('db')
+        connection = sqlite3.connect(db)
         cursor = connection.cursor()
         
         id = ctx.guild.id
@@ -39,7 +41,7 @@ class settings(commands.Cog):
     @commands.hybrid_command(name='xsaid', description='enables/disables x said prefix when speaking')
     @app_commands.describe(setting='true or false.')
     async def xsaid(self, ctx: commands.Context, setting: str) -> None:
-        connection = sqlite3.connect('db')
+        connection = sqlite3.connect(db)
         cursor = connection.cursor()
         
         id = ctx.guild.id
