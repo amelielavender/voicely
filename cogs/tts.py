@@ -86,8 +86,7 @@ class voice_commands(commands.Cog):
         connection.close()
 
         if q.is_full:
-            await ctx.send('Cannot have more than 3 messages in the queue.
-                           Please wait a moment and try again later.')
+            await ctx.send('Cannot have more than 3 messages in the queue. Please wait a moment and try again later.')
             return        
         else:
             q.add_msg(message)
