@@ -12,6 +12,7 @@ token = os.getenv("TOKEN")
 intents = discord.Intents.default() # discord's permission integer
 intents.message_content = True # permission scope
 intents.members = True  
+intents.message_content = True
 
 
 voicely = commands.Bot(
