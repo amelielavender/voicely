@@ -19,8 +19,7 @@ class settings(commands.Cog):
         cursor = connection.cursor()
         id = guild.id
         params = (id, 1)
-        cursor.execute('INSERT OR IGNORE INTO guilds 
-                       (guild_id, x_said) VALUES (?, ?)', params) 
+        cursor.execute('INSERT OR IGNORE INTO guilds (guild_id, x_said) VALUES (?, ?)', params) 
         connection.commit()
         connection.close()
 
@@ -36,9 +35,7 @@ class settings(commands.Cog):
         id = ctx.guild.id
         tc = channel.id
 
-        cursor.execute('UPDATE guilds 
-                       SET text_channel_id= ? 
-                       WHERE guild_id= ? ', (tc, id))
+        cursor.execute('UPDATE guilds SET text_channel_id= ? WHERE guild_id= ? ', (tc, id))
         
         connection.commit()
         connection.close()

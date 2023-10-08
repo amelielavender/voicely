@@ -86,7 +86,8 @@ class voice_commands(commands.Cog):
         connection.close()
 
         if q.is_full:
-            await ctx.send('Cannot have more than 3 messages in the queue. Please wait a moment and try again later.')
+            await ctx.send('Cannot have more than 3 messages in the queue.
+                           Please wait a moment and try again later.')
             return        
         else:
             q.add_msg(message)
@@ -99,7 +100,8 @@ class voice_commands(commands.Cog):
             guild = ctx.guild.id
             tts = gTTS(q.queue.pop(0), lang='en') 
             tts.save(f'output-{guild}.mp3') 
-            player = ctx.voice_client.play(FFmpegPCMAudio(f'output-{guild}.mp3'), after=lambda e: self.next(ctx, q))
+            player = ctx.voice_client.play(FFmpegPCMAudio(f'output-{guild}.mp3'), 
+                                           after=lambda e: self.next(ctx, q))
 
     @commands.hybrid_command(description='leaves the current voice channel')
     async def leave(self, ctx: commands.Context) -> None:
@@ -139,7 +141,6 @@ class voice_commands(commands.Cog):
             vc = ctx.guild.voice_client.channel
 
             while True:
-                self.counter = 0
                 await asyncio.sleep(1)
                 self.counter += 1
                 print(self.counter)
