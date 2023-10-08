@@ -50,6 +50,7 @@ async def load(ctx, mycog):
     except:
         await ctx.send('something went wrong')
 
+
 @voicely.command(name='unload', hidden=True)
 @commands.is_owner()
 async def unload(ctx, mycog):

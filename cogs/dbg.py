@@ -5,11 +5,11 @@ class debug(commands.Cog):
     def __init__(self, voicely):
         self.voicely = voicely
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def ping(self, ctx):
         await ctx.send('pong')
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def get_id(self, ctx, member: discord.Member):
         id = member.id
         try:

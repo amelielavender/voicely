@@ -94,7 +94,6 @@ class voice_commands(commands.Cog):
         while not ctx.voice_client.is_playing():
             self.next(ctx, q)        
 
-
     def next(self, ctx, q):
         if len(q.queue) != 0:
             guild = ctx.guild.id
@@ -112,7 +111,6 @@ class voice_commands(commands.Cog):
         else:
             await ctx.send('I am not in a voice channel') 
 
-
     @commands.hybrid_command(description='skips the currently playing message')
     async def skip(self, ctx: commands.Context) -> None:
         if (await self.join(ctx)) == False:
@@ -120,7 +118,6 @@ class voice_commands(commands.Cog):
         if ctx.voice_client.is_playing():
             ctx.voice_client.stop()
             await ctx.send('Skipping message')
-
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -142,13 +139,16 @@ class voice_commands(commands.Cog):
             vc = ctx.guild.voice_client.channel
 
             while True:
+                self.counter = 0
                 await asyncio.sleep(1)
                 self.counter += 1
+                print(self.counter)
                 if self.counter > 20 and len(vc.members) == 1:
                     await ctx.voice_client.disconnect()
                     self.counter = 0
                     return
                 elif len(vc.members) > 1:
+                    self.counter = 20
                     pass
         connection.close()
 

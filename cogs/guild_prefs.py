@@ -19,12 +19,16 @@ class settings(commands.Cog):
         cursor = connection.cursor()
         id = guild.id
         params = (id, 1)
-        cursor.execute('INSERT OR IGNORE INTO guilds (guild_id, x_said) VALUES (?, ?)', params) 
+        cursor.execute('INSERT OR IGNORE INTO guilds 
+                       (guild_id, x_said) VALUES (?, ?)', params) 
         connection.commit()
         connection.close()
 
-    @commands.hybrid_command(name='set', description='sets the text channel that voicely will read from')
-    @app_commands.describe(channel='choose the text channel for voicely to read from')
+    @commands.hybrid_command(name='set', 
+                             description
+                             ='sets the text channel that voicely will read from')
+    @app_commands.describe(channel
+                           ='choose the text channel for voicely to read from')
     async def set(self, ctx: commands.Context, channel: discord.TextChannel) -> None:
         connection = sqlite3.connect(db)
         cursor = connection.cursor()
@@ -32,15 +36,21 @@ class settings(commands.Cog):
         id = ctx.guild.id
         tc = channel.id
 
-        cursor.execute('UPDATE guilds SET text_channel_id= ? WHERE guild_id= ? ', (tc, id))
+        cursor.execute('UPDATE guilds 
+                       SET text_channel_id= ? 
+                       WHERE guild_id= ? ', (tc, id))
         
         connection.commit()
         connection.close()
         await ctx.send(f'now watching {channel} :eyes:')
 
-    @commands.hybrid_command(name='xsaid', description='enables/disables x said prefix when speaking')
+    @commands.hybrid_command(name='xsaid', 
+                             description
+                             ='enables/disables x said prefix when speaking')
     @app_commands.describe(setting='true or false.')
-    async def xsaid(self, ctx: commands.Context, setting: str) -> None:
+    async def xsaid(self, 
+                    ctx: commands.Context, 
+                    setting: str) -> None:
         connection = sqlite3.connect(db)
         cursor = connection.cursor()
         
