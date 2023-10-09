@@ -7,6 +7,7 @@ from gtts import gTTS
 import asyncio
 import sqlite3
 import os
+import re
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -37,7 +38,7 @@ class voice_commands(commands.Cog):
     def __init__(self, voicely):
         self.voicely = voicely
         self.queues: Dict[int, TTSq] = {} 
-        self.counter = 0
+        self.counter = 21
 
     async def join(self, ctx): # joins vc if msg author is in vc. 
         author = ctx.message.author # get msg author
@@ -77,6 +78,23 @@ class voice_commands(commands.Cog):
         
         result = cursor.execute('SELECT x_said FROM guilds WHERE guild_id= ? ',[guild])
         xsaid = result.fetchone()
+        
+        words = msg.split()
+
+        for i in range(len(words)):
+            raw = r'<@[0-9]*>'    
+            res = re.search(raw, words[i])
+            if res == None:
+                continue
+            if words[i] == res.group():
+                id = res.group().strip('<@>')
+                client = discord.Client
+                transform = ctx.author.guild.get_member(int(id))
+                await ctx.send(transform.display_name)
+                name = str(transform.display_name)
+                words[i] = re.sub(raw, name, words[i])
+
+        msg = ' '.join(words)
 
         if xsaid[0] == 1:
             # concatenate name and msg received as arg
@@ -84,6 +102,10 @@ class voice_commands(commands.Cog):
         if xsaid[0] == 0:
             message = msg
         connection.close()
+        
+
+        if len(ctx.message.attachments) > 0:
+            message = message + '{} has attached a file'.format(user)
 
         if q.is_full:
             await ctx.send('Cannot have more than 3 messages in the queue. Please wait a moment and try again later.')
@@ -122,7 +144,7 @@ class voice_commands(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        self.counter = 0
+
         connection = sqlite3.connect(db)
         cursor = connection.cursor()
         # returns a cursor object that lets us use sql statements using cursor.execute()
@@ -139,17 +161,19 @@ class voice_commands(commands.Cog):
             await self.speak(ctx, message.content)
             vc = ctx.guild.voice_client.channel
 
+# unfortunately the below block is very hacky. i don't posess the necessary knowledge as a beginner.
             while True:
                 await asyncio.sleep(1)
                 self.counter += 1
-                print(self.counter)
-                if self.counter > 20 and len(vc.members) == 1:
+                if self.counter >= 20 and len(vc.members) == 1:
                     await ctx.voice_client.disconnect()
                     self.counter = 0
                     return
                 elif len(vc.members) > 1:
                     self.counter = 20
-                    pass
+                    await asyncio.sleep(2)
+                    pass 
+
         connection.close()
 
 
