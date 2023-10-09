@@ -8,4 +8,4 @@ share
 pyvenv.cfg
 *.db
 *.csv
-__pycache__
+**/__pycache__/
