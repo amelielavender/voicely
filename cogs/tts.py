@@ -90,7 +90,6 @@ class voice_commands(commands.Cog):
                 id = res.group().strip('<@>')
                 client = discord.Client
                 transform = ctx.author.guild.get_member(int(id))
-                await ctx.send(transform.display_name)
                 name = str(transform.display_name)
                 words[i] = re.sub(raw, name, words[i])
 
