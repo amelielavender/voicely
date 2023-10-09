@@ -88,7 +88,6 @@ class voice_commands(commands.Cog):
                 continue
             if words[i] == res.group():
                 id = res.group().strip('<@>')
-                client = discord.Client
                 transform = ctx.author.guild.get_member(int(id))
                 name = str(transform.display_name)
                 words[i] = re.sub(raw, name, words[i])
