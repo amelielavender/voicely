@@ -1,5 +1,8 @@
 # Voicely 
-#### Video Demo:  <URL HERE>
+#### Video Demo:
+
+https://youtu.be/LwsXdm7SUnc
+
 #### Description:
 a voice for the voiceless. voicely is a discord bot written in python using the discord.py library. it allows for text-to-speech capabilities in a discord voice call. it monitors a selected text-channel for input, then broadcasts the resultant audio file to the current voice chat. users can choose which text channel they would like the bot to watch. this enables automatic text-to-speech, with no need for a command prefix, in that text channel. additionally, the "(x) said" tts prefix can be toggled on or off guild("server")-wide.
 
