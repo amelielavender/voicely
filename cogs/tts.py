@@ -80,18 +80,26 @@ class voice_commands(commands.Cog):
         xsaid = result.fetchone()
         
         words = msg.split()
+        
 
         for i in range(len(words)):
             raw = r'<@[0-9]*>'    
+            raw_emoji = r'<:.*:[0-9]*>'
             res = re.search(raw, words[i])
             if res == None:
-                continue
-            if words[i] == res.group():
+                res_emoji = re.search(raw_emoji, words[i])
+                if res_emoji == None:
+                    continue
+                elif words[i] == res_emoji.group():
+                    search = r'(?<=:).+?(?=:)'
+                    name = re.search(search, words[i])
+                    words[i] = str(name.group()) 
+            elif words[i] == res.group():
                 id = res.group().strip('<@>')
                 transform = ctx.author.guild.get_member(int(id))
                 name = str(transform.display_name)
                 words[i] = re.sub(raw, name, words[i])
-
+            
         msg = ' '.join(words)
 
         if xsaid[0] == 1:
