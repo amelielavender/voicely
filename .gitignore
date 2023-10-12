@@ -9,3 +9,4 @@ pyvenv.cfg
 *.db
 *.csv
 **/__pycache__/
+test-*
