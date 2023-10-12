@@ -98,8 +98,8 @@ class voice_commands(commands.Cog):
                 id = res.group().strip('<@>')
                 transform = ctx.author.guild.get_member(int(id))
                 name = str(transform.display_name)
-                words[i] = re.sub(raw, name, words[i])
-            
+                words[i] = name 
+                
         msg = ' '.join(words)
 
         if xsaid[0] == 1:
