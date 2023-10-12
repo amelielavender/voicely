@@ -80,7 +80,6 @@ class voice_commands(commands.Cog):
         xsaid = result.fetchone()
         
         words = msg.split()
-        
 
         for i in range(len(words)):
             raw = r'<@[0-9]*>'    
@@ -99,7 +98,7 @@ class voice_commands(commands.Cog):
                 transform = ctx.author.guild.get_member(int(id))
                 name = str(transform.display_name)
                 words[i] = re.sub(raw, name, words[i])
-            
+
         msg = ' '.join(words)
 
         if xsaid[0] == 1:
@@ -109,7 +108,9 @@ class voice_commands(commands.Cog):
             message = msg
         connection.close()
         
-
+        if len(ctx.message.stickers) > 0:
+            sticker = ctx.message.stickers[0].name
+            message = message + sticker
         if len(ctx.message.attachments) > 0:
             message = message + '{} has attached a file'.format(user)
 
