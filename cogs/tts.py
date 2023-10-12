@@ -62,9 +62,10 @@ class voice_commands(commands.Cog):
         emoji = '🔊'
         try:
             await ctx.message.add_reaction(emoji)
-            await discord.Interaction.response.add_reaction(emoji)
         except:
-            print('tts command error')
+            print('TTS invoked using slash command')
+        else:
+            await ctx.send(emoji, ephemeral=True)
 
     async def speak(self, ctx, msg):
         guild = ctx.guild.id
@@ -80,7 +81,6 @@ class voice_commands(commands.Cog):
         xsaid = result.fetchone()
         
         words = msg.split()
-        
 
         for i in range(len(words)):
             raw = r'<@[0-9]*>'    
