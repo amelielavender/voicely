@@ -7,7 +7,7 @@ import os
 
 load_dotenv()
 
-token = os.getenv("TOKEN")
+token = os.getenv("TEST_TOKEN")
     
 intents = discord.Intents.default() # discord's permission integer
 intents.message_content = True # permission scope

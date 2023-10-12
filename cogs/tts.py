@@ -62,7 +62,7 @@ class voice_commands(commands.Cog):
         emoji = '🔊'
         try:
             await ctx.message.add_reaction(emoji)
-            await discord.Interaction.message.add_reaction(emoji)
+            await discord.Interaction.response.add_reaction(emoji)
         except:
             print('tts command error')
 
