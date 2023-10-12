@@ -8,6 +8,7 @@ import os
 load_dotenv()
 
 token = os.getenv("TOKEN")
+desc = os.getenv("DESC")
     
 intents = discord.Intents.default() # discord's permission integer
 intents.message_content = True # permission scope
@@ -17,7 +18,7 @@ intents.message_content = True
 
 voicely = commands.Bot(
         command_prefix = ';',
-        description = 'DESC',
+        description = desc,
         intents = intents
         )
 
