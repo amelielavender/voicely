@@ -112,7 +112,9 @@ class voice_commands(commands.Cog):
         if len(ctx.message.stickers) > 0:
             sticker = ctx.message.stickers[0].name
             message = message + sticker
-        if len(ctx.message.attachments) > 0:
+        if msg == ''  and len(ctx.message.attachments) >0:
+            message = '{} has attached a file.'.format(user)
+        elif len(ctx.message.attachments) > 0:
             message = message + '{} has attached a file'.format(user)
 
         if q.is_full:
