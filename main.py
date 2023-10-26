@@ -1,6 +1,6 @@
 import discord 
-import asyncio
-from discord import app_commands
+# TODO: figure out my own async start?
+#import asyncio
 from discord.ext import commands 
 from dotenv import load_dotenv
 import os
@@ -25,7 +25,7 @@ voicely = commands.Bot(
 
 @voicely.event
 async def on_ready():
-    print(f'logging on as {voicely.user.id}')
+    print(f'logging on as {voicely.user}')
     await load_ext()
 
 
