@@ -1,14 +1,14 @@
+import asyncio
+import os
+import re
+import sqlite3
+from typing import Dict
+
 import discord
 from discord import FFmpegPCMAudio
 from discord.ext import commands
-from discord import app_commands
-from typing import Dict
-from gtts import gTTS
-import asyncio
-import sqlite3
-import os
-import re
 from dotenv import load_dotenv
+from gtts import gTTS
 
 load_dotenv()
 
