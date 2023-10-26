@@ -1,9 +1,8 @@
-import discord 
-# TODO: figure out my own async start?
-#import asyncio
-from discord.ext import commands 
-from dotenv import load_dotenv
 import os
+
+import discord
+from discord.ext import commands
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -72,13 +71,6 @@ async def rel(ctx, mycog):
     except:
         await ctx.send('something went wrong')
 
-
-#async def main():
-    # TODO: try/except to handle cleanup on KeyboardInterrupt()
-    #async with voicely:
-        #await load_ext() 
-        
-#asyncio.start(main())
 
 voicely.run(token)
 
