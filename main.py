@@ -1,8 +1,9 @@
-import os
-
-import discord
-from discord.ext import commands
+import discord 
+# TODO: figure out my own async start?
+#import asyncio
+from discord.ext import commands 
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
