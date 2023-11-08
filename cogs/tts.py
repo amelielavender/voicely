@@ -7,7 +7,7 @@ from gtts import gTTS
 import asyncio
 import sqlite3
 import os
-import re
+import regex as re
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -83,13 +83,20 @@ class voice_commands(commands.Cog):
         words = msg.split()
 
         for i in range(len(words)):
+            # A discord user ID
             raw = r'<@[0-9]*>'    
             raw_emoji = r'<:.*:[0-9]*>'
+            raw_url = r'(?<=https:\/\/|http:\/\/|ftp:\/\/).+?[^\/:](?=[?\/]|$)'
+
             res = re.search(raw, words[i])
             if res == None:
                 res_emoji = re.search(raw_emoji, words[i])
                 if res_emoji == None:
-                    continue
+                    res_url = re.search(raw_url, words[i])
+                    if res_url == None:
+                       continue 
+                    else:
+                        words[i] = str(res_url.group())
                 elif words[i] == res_emoji.group():
                     search = r'(?<=:).+?(?=:)'
                     name = re.search(search, words[i])
