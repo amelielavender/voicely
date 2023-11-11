@@ -145,9 +145,10 @@ class voice_commands(commands.Cog):
         if len(q.queue) != 0:
             guild = ctx.guild.id
             tts = gTTS(q.queue.pop(0), lang="en")
-            tts.save(f"output-{guild}.mp3")
+            outfile = f"files/tts/output-{guild}.mp3"
+            tts.save(outfile)
             player = ctx.voice_client.play(
-                FFmpegPCMAudio(f"output-{guild}.mp3"), after=lambda e: self.next(ctx, q)
+                FFmpegPCMAudio(outfile), after=lambda e: self.next(ctx, q)
             )
 
     @commands.hybrid_command(description="leaves the current voice channel")
@@ -193,7 +194,7 @@ class voice_commands(commands.Cog):
             if message.content.startswith('i will kill you right now'):
                 try:
                     player = ctx.voice_client.play(
-                    FFmpegPCMAudio(f"./files/tts/killyou.wav")
+                    FFmpegPCMAudio(f"files/tts/killyou.wav")
                 )
                 except:
                     await self.speak(ctx, message.content)
