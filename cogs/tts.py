@@ -189,10 +189,21 @@ class voice_commands(commands.Cog):
             and message.author.voice
         ):
             await self.join(ctx)
-            await self.speak(ctx, message.content)
+
+            if message.content.startswith('i will kill you right now'):
+                try:
+                    player = ctx.voice_client.play(
+                    FFmpegPCMAudio(f"./files/tts/killyou.wav")
+                )
+                except:
+                    await self.speak(ctx, message.content)
+            else:  
+                await self.speak(ctx, message.content)
+            
             vc = ctx.guild.voice_client.channel
 
-            # unfortunately the below block is very hacky. i don't posess the necessary knowledge as a beginner.
+            # unfortunately the below block is very hacky.
+            # i don't posess the necessary knowledge as a beginner.
             while True:
                 await asyncio.sleep(1)
                 self.counter += 1
