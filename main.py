@@ -9,6 +9,11 @@ load_dotenv()
 token = os.getenv("TOKEN")
 desc = os.getenv("DESC")
 
+path = 'files/tts'
+if not os.path.exists(path):
+    os.makedirs(path)
+
+
 intents = discord.Intents.default()  # discord's permission integer
 intents.message_content = True  # permission scope
 intents.members = True
