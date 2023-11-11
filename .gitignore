@@ -11,3 +11,4 @@ pyvenv.cfg
 *.csv
 **/__pycache__/
 test-main.py
+files
